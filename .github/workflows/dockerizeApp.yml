@@ -1,0 +1,33 @@
+name: Social Media app
+
+on: push
+
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        service: [backend, frontend]
+
+    steps:
+      
+      - name: Checkout code
+        uses: actions/checkout@v6
+      
+      - name: Log in to GHCR
+        uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }} # automatically pick this value while running action
+          password: ${{ secrets.GITHUB_TOKEN }} # automatically pick this value while running action
+      
+      - name: Build Docker image
+        run: |
+          docker build \
+            -t ghcr.io/${{ github.repository_owner }}/SMappFastApi-${{ matrix.service }}:latest \
+            ./${{ matrix.service }}
+      
+      - name: Push Docker image
+        run: |
+          docker push ghcr.io/${{ github.repository_owner }}/SMappFastApi-${{ matrix.service }}:latest
