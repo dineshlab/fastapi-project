@@ -1,8 +1,8 @@
 from sqlalchemy.orm import Session
 from sqlalchemy import func
 from fastapi import HTTPException, status
-from . import models, schemas
-from .core.security import hash_password
+import models, schemas
+from core.security import hash_password
 
 # --- Users ---
 def get_user(db: Session, user_id: int):
